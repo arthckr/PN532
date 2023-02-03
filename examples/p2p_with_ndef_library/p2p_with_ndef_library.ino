@@ -3,8 +3,8 @@
 // note: [NDEF library](https://github.com/Don/NDEF) is needed.
 
 #include "SPI.h"
-#include "PN532/PN532_SPI/PN532_SPI.h"
-#include "PN532/PN532/snep.h"
+#include "PN532_SPI.h"
+#include "snep.h"
 #include "NdefMessage.h"
 
 PN532_SPI pn532spi(SPI, 10);
@@ -24,17 +24,21 @@ void loop()
     NdefMessage message = NdefMessage();
     message.addUriRecord("http://www.seeedstudio.com");
     int messageSize = message.getEncodedSize();
-    if (messageSize > sizeof(ndefBuf)) {
+    if (messageSize > sizeof(ndefBuf))
+    {
         Serial.println("ndefBuf is too small");
-        while (1) {
+        while (1)
+        {
         }
-
     }
 
     message.encode(ndefBuf);
-    if (0 >= nfc.write(ndefBuf, messageSize)) {
+    if (0 >= nfc.write(ndefBuf, messageSize))
+    {
         Serial.println("Failed");
-    } else {
+    }
+    else
+    {
         Serial.println("Success");
     }
 
@@ -42,11 +46,14 @@ void loop()
 #else
     Serial.println("Get a message from Android");
     int msgSize = nfc.read(ndefBuf, sizeof(ndefBuf));
-    if (msgSize > 0) {
-        NdefMessage msg  = NdefMessage(ndefBuf, msgSize);
+    if (msgSize > 0)
+    {
+        NdefMessage msg = NdefMessage(ndefBuf, msgSize);
         msg.print();
         Serial.println("\nSuccess");
-    } else {
+    }
+    else
+    {
         Serial.println("failed");
     }
     delay(3000);
