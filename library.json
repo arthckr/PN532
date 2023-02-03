@@ -40,6 +40,9 @@
     "branch": "arduino",
     "type": "git"
   },
+  "build": {
+    "extraScript": "extra_script.py"
+  },
   "examples": [
     {
       "name": "FeliCa card detection",
