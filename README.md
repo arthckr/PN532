@@ -25,6 +25,13 @@ It is for [NFC Shield](http://goo.gl/Cac2OH) and [Grove - NFC](http://goo.gl/L3U
   2. Download [Don's NDEF library](http://goo.gl/ewxeAe)， extract it into Arduino's libraries and rename it to NDEF.
   3. Follow the examples of the two libraries.
 
++ PlatformIO library
+Add `https://github.com/Seeed-Studio/PN532.git` to your `lib_deps` variable in `platformio.ini` like so:
+```
+lib_deps =
+    https://github.com/Seeed-Studio/PN532.git
+```
+
 + Git way for Linux/Mac (recommended)
 
   1. Get PN532 library and NDEF library
