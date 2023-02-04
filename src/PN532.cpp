@@ -46,15 +46,15 @@ void PN532::PrintHex(const uint8_t *data, const uint32_t numBytes)
     {
         if (data[i] < 0x10)
         {
-            SERIAL.print(" 0");
+            PN532_DEBUG_SERIAL.print(" 0");
         }
         else
         {
-            SERIAL.print(' ');
+            PN532_DEBUG_SERIAL.print(' ');
         }
-        SERIAL.print(data[i], HEX);
+        PN532_DEBUG_SERIAL.print(data[i], HEX);
     }
-    SERIAL.println("");
+    PN532_DEBUG_SERIAL.println("");
 #else
     for (uint8_t i = 0; i < numBytes; i++)
     {
@@ -82,28 +82,28 @@ void PN532::PrintHexChar(const uint8_t *data, const uint32_t numBytes)
     {
         if (data[i] < 0x10)
         {
-            SERIAL.print(" 0");
+            PN532_DEBUG_SERIAL.print(" 0");
         }
         else
         {
-            SERIAL.print(' ');
+            PN532_DEBUG_SERIAL.print(' ');
         }
-        SERIAL.print(data[i], HEX);
+        PN532_DEBUG_SERIAL.print(data[i], HEX);
     }
-    SERIAL.print("    ");
+    PN532_DEBUG_SERIAL.print("    ");
     for (uint8_t i = 0; i < numBytes; i++)
     {
         char c = data[i];
         if (c <= 0x1f || c > 0x7f)
         {
-            SERIAL.print('.');
+            PN532_DEBUG_SERIAL.print('.');
         }
         else
         {
-            SERIAL.print(c);
+            PN532_DEBUG_SERIAL.print(c);
         }
     }
-    SERIAL.println("");
+    PN532_DEBUG_SERIAL.println("");
 #else
     for (uint8_t i = 0; i < numBytes; i++)
     {
