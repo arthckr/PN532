@@ -1,3 +1,5 @@
+#ifdef NFC_INTERFACE_I2C
+
 /**
  * @modified picospuch
  */
@@ -252,3 +254,5 @@ int8_t PN532_I2C::readAckFrame()
 
     return 0;
 }
+
+#endif // NFC_INTERFACE_I2C

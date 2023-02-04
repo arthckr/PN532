@@ -1,3 +1,4 @@
+#ifdef NFC_INTERFACE_SWHSU
 
 #include "PN532_SWHSU.h"
 #include "PN532_debug.h"
@@ -218,3 +219,5 @@ int8_t PN532_SWHSU::receive(uint8_t *buf, int len, uint16_t timeout)
     }
     return read_bytes;
 }
+
+#endif // NFC_INTERFACE_SWHSU
