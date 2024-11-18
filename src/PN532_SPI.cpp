@@ -1,6 +1,7 @@
+#ifdef NFC_INTERFACE_SPI
 
-#include "PN532/PN532_SPI/PN532_SPI.h"
-#include "PN532/PN532/PN532_debug.h"
+#include "PN532_SPI.h"
+#include "PN532_debug.h"
 #include "Arduino.h"
 
 #define STATUS_READ 2
@@ -224,3 +225,5 @@ int8_t PN532_SPI::readAckFrame()
 
     return memcmp(ackBuf, PN532_ACK, sizeof(PN532_ACK));
 }
+
+#endif // NFC_INTERFACE_SPI

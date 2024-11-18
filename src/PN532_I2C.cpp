@@ -1,3 +1,5 @@
+#ifdef NFC_INTERFACE_I2C
+
 /**
  * @modified picospuch
  */
@@ -218,7 +220,7 @@ int8_t PN532_I2C::readAckFrame()
     uint16_t time = 0;
     do
     {
-        if (_wire->requestFrom(PN532_I2C_ADDRESS, sizeof(PN532_ACK) + 1))
+        if (_wire->requestFrom(PN532_I2C_ADDRESS, (int)sizeof(PN532_ACK) + 1))
         {
             if (read() & 1)
             {          // check first byte --- status
@@ -252,3 +254,5 @@ int8_t PN532_I2C::readAckFrame()
 
     return 0;
 }
+
+#endif // NFC_INTERFACE_I2C

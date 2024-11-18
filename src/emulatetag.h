@@ -1,6 +1,6 @@
 /**************************************************************************/
 /*!
-    @file     PN532/PN532/emulatetag.h
+    @file     emulatetag.h
     @author   Armin Wieser
     @license  BSD
 

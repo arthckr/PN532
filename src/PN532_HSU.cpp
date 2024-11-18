@@ -1,6 +1,7 @@
+#ifdef NFC_INTERFACE_HSU
 
-#include "PN532/PN532_HSU/PN532_HSU.h"
-#include "PN532/PN532/PN532_debug.h"
+#include "PN532_HSU.h"
+#include "PN532_debug.h"
 
 PN532_HSU::PN532_HSU(HardwareSerial &serial)
 {
@@ -221,3 +222,5 @@ int8_t PN532_HSU::receive(uint8_t *buf, int len, uint16_t timeout)
     }
     return read_bytes;
 }
+
+#endif // NFC_INTERFACE_HSU
