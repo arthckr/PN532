@@ -79,24 +79,32 @@ void EmulateTag::setUid(uint8_t *uid)
 bool EmulateTag::emulate(const uint16_t tgInitAsTargetTimeout)
 {
 
-  uint8_t command[] = {
+    //https://github.com/Seeed-Studio/PN532/issues/88
+    uint8_t command[] = {
       PN532_COMMAND_TGINITASTARGET,
-      5, // MODE: PICC only, Passive only
+      0x05,                  // MODE: 0x04 = PICC only, 0x01 = Passive only (0x02 = DEP only)
 
-      0x04, 0x00,       // SENS_RES
-      0x00, 0x00, 0x00, // NFCID1
-      0x20,             // SEL_RES
+      // MIFARE PARAMS
+      0x04, 0x00,         // SENS_RES (seeeds studio set it to 0x04, nxp to 0x08)
+      0x00, 0x00, 0x00,   // NFCID1t	(is set over sketch with setUID())
+      0x20,               // SEL_RES    (0x20=Mifare DelFire, 0x60=custom)
 
-      0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, // FeliCaParams
-      0, 0,
+      // FELICA PARAMS
+      0x01, 0xFE,         // NFCID2t (8 bytes) https://github.com/adafruit/Adafruit-PN532/blob/master/Adafruit_PN532.cpp FeliCa NEEDS TO BEGIN WITH 0x01 0xFE!
+      0x05, 0x01, 0x86,
+      0x04, 0x02, 0x02,
+      0x03, 0x00,         // PAD (8 bytes)
+      0x4B, 0x02, 0x4F, 
+      0x49, 0x8A, 0x00,   
+      0xFF, 0xFF,         // System code (2 bytes)
+      
+      0x01, 0x01, 0x66,   // NFCID3t (10 bytes)
+      0x6D, 0x01, 0x01, 0x10,
+      0x02, 0x00, 0x00,
 
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // NFCID3t
-
-      0, // length of general bytes
-      0  // length of historical bytes
+	  0x00, // length of general bytes
+      0x00  // length of historical bytes
   };
-
   if (uidPtr != 0)
   { // if uid is set copy 3 bytes to nfcid1
     memcpy(command + 4, uidPtr, 3);
@@ -134,10 +142,36 @@ bool EmulateTag::emulate(const uint16_t tgInitAsTargetTimeout)
   tag_file currentFile = NONE;
   uint16_t cc_size = sizeof(compatibility_container);
   bool runLoop = true;
-
+  bool firstTry = true;
+  uint8_t retries = 0;
+  uint8_t maxRetries = 3;
   while (runLoop)
   {
-    status = pn532.tgGetData(rwbuf, sizeof(rwbuf));
+    //retry code begins...
+    if(retries < maxRetries) {
+      retries++;
+      status = pn532.tgGetData(rwbuf, sizeof(rwbuf));
+
+      if(status == -6) {
+        DMSG("found 0x29, try init again");
+        if (1 != pn532.tgInitAsTarget(command, sizeof(command), tgInitAsTargetTimeout))
+        {
+            DMSG("reset again failed!");
+            pn532.inRelease();
+            return true;
+        }
+        DMSG("inited again succesfully");
+        retries = maxRetries; // then continue normally by maxing out retries
+        continue; 
+      }
+      if(status < 0) { // some other kind of fail... still retrying
+          DMSG("Some other fail, still retrying...");
+          continue;
+      }
+    } else {
+        status = pn532.tgGetData(rwbuf, sizeof(rwbuf));
+    }
+
     if (status < 0)
     {
       DMSG("tgGetData failed!\n");

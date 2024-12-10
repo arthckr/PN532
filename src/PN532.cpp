@@ -1073,32 +1073,36 @@ int16_t PN532::tgGetData(uint8_t *buf, uint8_t len)
 {
     buf[0] = PN532_COMMAND_TGGETDATA;
 
-    if (HAL(writeCommand)(buf, 1))
-    {
+    if (HAL(writeCommand)(buf, 1)) {
         return -1;
     }
 
     int16_t status = HAL(readResponse)(buf, len, 3000);
-    if (0 >= status)
-    {
+    if (0 >= status) {
         return status;
     }
 
+
     uint16_t length = status - 1;
 
-    if (buf[0] != 0)
-    {
+    if(buf[0] == 0x29) {
+        DMSG("status 0x29, init again...");
+        return -6;
+    }
+    
+
+    if (buf[0] != 0) {
         DMSG("status is not ok\n");
         return -5;
     }
 
-    for (uint8_t i = 0; i < length; i++)
-    {
+    for (uint8_t i = 0; i < length; i++) {
         buf[i] = buf[i + 1];
     }
 
     return length;
 }
+
 
 bool PN532::tgSetData(const uint8_t *header, uint8_t hlen, const uint8_t *body, uint8_t blen)
 {
