@@ -11,7 +11,8 @@ PN532_HSU::PN532_HSU(HardwareSerial &serial)
 
 void PN532_HSU::begin()
 {
-    _serial->begin(115200);
+    //_serial->begin(115200);
+    return;
 }
 
 void PN532_HSU::wakeup()
